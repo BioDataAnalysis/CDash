@@ -1,5 +1,7 @@
 # Installation
 
+To upgrade CDash from any 3.x version to the current latest, see the corresponding "Upgrade" section at the bottom of this page.
+
 If you'd like to install CDash in a [Docker](https://www.docker.com) container, please see our
 [Docker installation guide](docker.md).
 
@@ -39,7 +41,7 @@ CDash is built on top of the [Laravel framework](https://laravel.com).
 
 Laravel's routing system requires your web server to have the `mod_rewrite` module enabled.
 
-It also requires your web server to honor .htaccess files `(AllowOverride All)`.
+It also requires your web server to honor `.htaccess` files `(AllowOverride All)`.
 
 See [Laravel documentation](https://laravel.com/docs/6.x/installation#pretty-urls) for more information.
 
@@ -71,9 +73,9 @@ chgrp -R www-data /path/to/CDash
 chmod -R g+rw /path/to/CDash
 ```
 
-## Install/upgrade steps
+## Install steps
 
-Perform the follow steps when you initially install CDash and upon each subsequent upgrade.
+Perform the follow steps to initially install CDash:
 
 ```bash
 # Install PHP and JavaScript dependencies
@@ -132,3 +134,35 @@ redirected to `install.php`. Fill out the installation form to create the
 database tables and the initial admin user.
 
 Once that is complete you can create a project and start submitting builds to it.
+
+# Upgrade CDash from 3.x
+
+If you have already installed a 3.x version of CDash and want to upgrade to the current latest, here are the required steps. These steps assume that you already configured CDash and have a running database. These steps will not change the configuration and database. See the section on "Installation" above if you want to change the configuration during the upgrade.
+
+First, check the installation status:
+```bash
+cd /your/path/to/cdash/
+git status
+```
+
+If this shows a local change in `package-lock.json`, it is acceptable to revert to the latest official version:
+```bash
+git checkout package-lock.json
+```
+
+If there are no other git changes, you can fetch the latest version from github and checkout the revision you want to upgrade to (here we use `v3.0.3` as an example):
+```bash
+git fetch && \
+git checkout v3.0.3
+```
+
+Then make sure to install the latest PHP and JavaScript dependencies:
+```bash
+composer install --no-dev --prefer-dist && \
+npm install
+```
+
+Finally generate the updated build files:
+```bash
+npm run dev
+```
